@@ -1,0 +1,6 @@
+# never send secrets or vendor tooling to the Docker build context
+license-tool/
+deploy/local/
+.env
+.git/
+docker-compose.override.yml

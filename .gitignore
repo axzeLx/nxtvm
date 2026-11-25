@@ -1,0 +1,15 @@
+# Site-specific deployment files (vhost, certificates, local notes) — never published
+/deploy/local/
+/docker/ssl/
+.env
+*.log
+.DS_Store
+
+# license tool: private signing key and record of issued keys
+/license-tool/keys/
+/license-tool/issued.csv
+# vendor-only compose additions (license page /lic)
+/docker-compose.override.yml
+
+# vendor license tool (key issuing, /lic page) — never published
+/license-tool/

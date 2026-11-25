@@ -1,0 +1,2 @@
+# vSphere Web Services (vim25) SDK — read-only inventory collection
+pyvmomi==8.0.3.0.1

@@ -1,0 +1,49 @@
+# nxtVM — vCenter inventory & health checkup
+# Database (PostgreSQL) lives on the host, reached via host.docker.internal.
+x-app: &app
+  image: nxtvm-php
+  volumes:
+    - ./src:/var/www/html
+    # host machine id: the license machine code is derived from it (read-only)
+    - /etc/machine-id:/etc/host-machine-id:ro
+  environment:
+    LANG: C.UTF-8
+  extra_hosts:
+    - "host.docker.internal:host-gateway"
+  restart: unless-stopped
+
+services:
+  php:
+    <<: *app
+    build:
+      context: .
+      args:
+        PHP_VERSION: "8.4"
+        UID: "1000"
+        GID: "2000"
+
+  # Collection jobs (vCenter API polling)
+  worker:
+    <<: *app
+    command: ["php", "artisan", "queue:work", "--queue=collect,default", "--sleep=1", "--tries=1", "--max-time=3600"]
+    depends_on:
+      - php
+
+  # Dispatches collection jobs according to per-vCenter intervals
+  scheduler:
+    <<: *app
+    command: ["php", "artisan", "schedule:work"]
+    depends_on:
+      - php
+
+  web:
+    image: nginx:alpine
+    # Public entry is the host Nginx (TLS) → 127.0.0.1:${WEB_PORT}
+    ports:
+      - "127.0.0.1:${WEB_PORT:-8190}:80"
+    volumes:
+      - ./src:/var/www/html
+      - ./docker/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    depends_on:
+      - php
+    restart: unless-stopped

@@ -1,0 +1,273 @@
+@import 'tailwindcss';
+
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../storage/framework/views/*.php';
+
+/* Dark mode follows the .dark class on <html> (set from light / dark / system preference) */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/*
+ * Design tokens. Components use these semantic names only.
+ * The defaults below are the "teal" palette (light); every palette overrides them under
+ * html[data-theme="…"] and html[data-theme="…"].dark. Status colours are shared unless a palette overrides them.
+ */
+@theme {
+    --font-sans: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace;
+
+    --color-bg: #f6f7f9;
+    --color-surface: #ffffff;
+    --color-surface-2: #f1f3f6;
+    --color-line: #e3e6eb;
+    --color-fg: #18202b;
+    --color-muted: #637083;
+    --color-accent: #0f8b8d;
+    --color-accent-fg: #ffffff;
+    --color-accent-soft: #e2f3f3;
+
+    --color-ok: #1f9d55;
+    --color-warn: #c98a04;
+    --color-crit: #d23f3f;
+    --color-unknown: #8a94a3;
+    --color-info: #2f72b8;
+}
+
+@layer base {
+    /* Shared dark status colours */
+    .dark {
+        --color-ok: #3cc07a;
+        --color-warn: #e3a92b;
+        --color-crit: #f06464;
+        --color-unknown: #7b8696;
+        --color-info: #7fb2e8;
+    }
+
+    /* ---- teal (default) ---- */
+    html[data-theme='teal'].dark {
+        --color-bg: #0f1419; --color-surface: #161c23; --color-surface-2: #1d252e; --color-line: #2a333e;
+        --color-fg: #e5e9ee; --color-muted: #8f9bab;
+        --color-accent: #2bb3b1; --color-accent-fg: #06201f; --color-accent-soft: #123536;
+    }
+
+    /* ---- ocean ---- */
+    html[data-theme='ocean'] {
+        --color-bg: #f4f7fb; --color-surface: #ffffff; --color-surface-2: #eaf0f7; --color-line: #dbe3ee;
+        --color-fg: #132033; --color-muted: #5d6b80;
+        --color-accent: #1d6fd1; --color-accent-fg: #ffffff; --color-accent-soft: #e3eefb;
+    }
+    html[data-theme='ocean'].dark {
+        --color-bg: #0b1220; --color-surface: #111a2b; --color-surface-2: #18233a; --color-line: #24324d;
+        --color-fg: #e3e9f3; --color-muted: #8b9ab3;
+        --color-accent: #4c9bf0; --color-accent-fg: #04152b; --color-accent-soft: #12294a;
+    }
+
+    /* ---- forest ---- */
+    html[data-theme='forest'] {
+        --color-bg: #f5f7f4; --color-surface: #ffffff; --color-surface-2: #edf1eb; --color-line: #dde4d9;
+        --color-fg: #1a2418; --color-muted: #5f6d5b;
+        --color-accent: #2f7d4a; --color-accent-fg: #ffffff; --color-accent-soft: #e4f1e8;
+    }
+    html[data-theme='forest'].dark {
+        --color-bg: #0e130f; --color-surface: #141b15; --color-surface-2: #1b241c; --color-line: #283429;
+        --color-fg: #e3ebe2; --color-muted: #8fa08c;
+        --color-accent: #4fbf74; --color-accent-fg: #062010; --color-accent-soft: #163420;
+    }
+
+    /* ---- graphite ---- */
+    html[data-theme='graphite'] {
+        --color-bg: #f5f5f5; --color-surface: #ffffff; --color-surface-2: #eeeeee; --color-line: #e0e0e0;
+        --color-fg: #1a1a1a; --color-muted: #6b6b6b;
+        --color-accent: #3f3f46; --color-accent-fg: #ffffff; --color-accent-soft: #e7e7ea;
+    }
+    html[data-theme='graphite'].dark {
+        --color-bg: #111111; --color-surface: #191919; --color-surface-2: #222222; --color-line: #2e2e2e;
+        --color-fg: #ececec; --color-muted: #9a9a9a;
+        --color-accent: #d4d4d8; --color-accent-fg: #111111; --color-accent-soft: #2a2a2e;
+    }
+
+    /* ---- amber ---- */
+    html[data-theme='amber'] {
+        --color-bg: #faf8f3; --color-surface: #ffffff; --color-surface-2: #f4f0e6; --color-line: #e8e1d0;
+        --color-fg: #2a2216; --color-muted: #75694f;
+        --color-accent: #b45f06; --color-accent-fg: #ffffff; --color-accent-soft: #fbecd9;
+    }
+    html[data-theme='amber'].dark {
+        --color-bg: #14110b; --color-surface: #1c1810; --color-surface-2: #262014; --color-line: #352d1d;
+        --color-fg: #f1ead9; --color-muted: #a8997a;
+        --color-accent: #f0a43a; --color-accent-fg: #241503; --color-accent-soft: #3a2a12;
+    }
+
+    /* ---- rose ---- */
+    html[data-theme='rose'] {
+        --color-bg: #fbf6f7; --color-surface: #ffffff; --color-surface-2: #f5ecee; --color-line: #ecdde1;
+        --color-fg: #2a171c; --color-muted: #7a5e66;
+        --color-accent: #c2185b; --color-accent-fg: #ffffff; --color-accent-soft: #fbe3ec;
+    }
+    html[data-theme='rose'].dark {
+        --color-bg: #150d10; --color-surface: #1e1317; --color-surface-2: #281a1f; --color-line: #382630;
+        --color-fg: #f3e4e9; --color-muted: #ad8f99;
+        --color-accent: #f06292; --color-accent-fg: #2b0612; --color-accent-soft: #3d1626;
+    }
+
+    /* ---- violet ---- */
+    html[data-theme='violet'] {
+        --color-bg: #f7f6fb; --color-surface: #ffffff; --color-surface-2: #efedf7; --color-line: #e2def0;
+        --color-fg: #1f1a2e; --color-muted: #686180;
+        --color-accent: #6d4bd8; --color-accent-fg: #ffffff; --color-accent-soft: #ece7fb;
+    }
+    html[data-theme='violet'].dark {
+        --color-bg: #110f1a; --color-surface: #181524; --color-surface-2: #211d31; --color-line: #2f2a45;
+        --color-fg: #e8e5f5; --color-muted: #9a93b8;
+        --color-accent: #9b83f5; --color-accent-fg: #160c33; --color-accent-soft: #2a2150;
+    }
+
+    /* ---- nord ---- */
+    html[data-theme='nord'] {
+        --color-bg: #eceff4; --color-surface: #ffffff; --color-surface-2: #e5e9f0; --color-line: #d8dee9;
+        --color-fg: #2e3440; --color-muted: #4c566a;
+        --color-accent: #5e81ac; --color-accent-fg: #ffffff; --color-accent-soft: #dfe7f1;
+    }
+    html[data-theme='nord'].dark {
+        --color-bg: #2e3440; --color-surface: #3b4252; --color-surface-2: #434c5e; --color-line: #4c566a;
+        --color-fg: #eceff4; --color-muted: #a3adbf;
+        --color-accent: #88c0d0; --color-accent-fg: #1d2a33; --color-accent-soft: #3b5260;
+        --color-ok: #a3be8c; --color-warn: #ebcb8b; --color-crit: #e07a84; --color-info: #81a1c1;
+    }
+
+    html { color-scheme: light; }
+    html.dark { color-scheme: dark; }
+    body { @apply bg-bg text-fg antialiased; }
+    [x-cloak] { display: none !important; }
+}
+
+@layer components {
+    /* licensed main module link in the top bar (Checkup): stands apart from the inventory pages */
+    .nav-module { @apply inline-flex items-center gap-1.5 whitespace-nowrap px-2 py-1 text-xs font-bold tracking-wider text-fg hover:text-accent transition-colors; }
+    .nav-module.active { @apply text-accent; }
+
+    /* "Ask AI" — a colourful, slowly shifting gradient pill (same palette as the Checkup shield) */
+    .btn-magic {
+        @apply inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold text-white whitespace-nowrap cursor-pointer select-none;
+        background: linear-gradient(110deg, #f59e0b, #ec4899, #8b5cf6, #06b6d4, #f59e0b);
+        background-size: 300% 100%;
+        animation: magic-shift 8s linear infinite;
+        box-shadow: 0 1px 6px -1px color-mix(in oklab, #8b5cf6 55%, transparent);
+        transition: transform .15s, box-shadow .15s;
+    }
+    .btn-magic:hover, .btn-magic[aria-expanded="true"] {
+        transform: translateY(-1px);
+        box-shadow: 0 0 0 3px color-mix(in oklab, #ec4899 22%, transparent), 0 6px 18px -4px color-mix(in oklab, #8b5cf6 65%, transparent);
+    }
+    .btn-magic svg { animation: magic-twinkle 2.4s ease-in-out infinite; }
+    /* "Ask AI" for table rows (alarms): blue pill — soft in light mode, bright in dark mode; gradient ring on hover */
+    .btn-ai {
+        @apply inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-[11px] font-semibold whitespace-nowrap cursor-pointer select-none transition-all;
+        background-color: #dbeafe; border-color: #bfdbfe; color: #1d4ed8;
+    }
+    .btn-ai:hover, .btn-ai[aria-expanded="true"] {
+        background-color: #bfdbfe; border-color: #60a5fa;
+        box-shadow: 0 0 0 2px color-mix(in oklab, #3b82f6 25%, transparent);
+    }
+    .dark .btn-ai { background-color: #2563eb; border-color: #3b82f6; color: #fff; }
+    .dark .btn-ai svg g { fill: #fff; }
+    .dark .btn-ai:hover, .dark .btn-ai[aria-expanded="true"] {
+        background-color: #3b82f6; border-color: #93c5fd;
+        box-shadow: 0 0 0 2px color-mix(in oklab, #60a5fa 40%, transparent), 0 4px 14px -4px #3b82f6;
+    }
+    .magic-ring { background: linear-gradient(110deg, #f59e0b, #ec4899, #8b5cf6, #06b6d4); }
+    .card { @apply bg-surface border border-line rounded-lg; }
+    /* emphasised card: 2px border, the line colour a little darker (follows every theme, light and dark) */
+    .card-strong { border-width: 2px; border-color: color-mix(in oklab, var(--color-line), var(--color-fg) 14%); }
+    .card-h { @apply px-3 py-2 border-b border-line flex items-center justify-between gap-3; }
+    .card-t { @apply text-sm font-semibold; }
+
+    .btn { @apply inline-flex items-center justify-center gap-1.5 rounded-md px-3 py-1.5 text-sm font-medium border border-line bg-surface hover:bg-surface-2 transition-colors disabled:opacity-50 cursor-pointer; }
+    .btn-primary { @apply bg-accent text-accent-fg border-transparent hover:opacity-90 hover:bg-accent; }
+    .btn-danger { @apply text-crit hover:bg-crit/10; }
+    .btn-sm { @apply px-2 py-0.5 text-xs; }
+
+    .label { @apply block text-xs font-medium text-muted mb-1; }
+    .input { @apply w-full rounded-md border border-line bg-surface px-2.5 py-1.5 text-sm placeholder:text-muted/70 focus:outline-none focus:ring-2 focus:ring-accent/40 focus:border-accent; }
+    .field-error { @apply text-xs text-crit mt-1; }
+    .hint { @apply text-xs text-muted mt-1; }
+
+    /* Compact data tables */
+    .table { @apply w-full text-[13px] leading-tight; }
+    .table th { @apply text-left text-[11px] uppercase tracking-wide font-medium text-muted px-3 py-1.5 border-b border-line bg-surface-2/60 whitespace-nowrap; }
+    .table td { @apply px-3 py-1.5 border-b border-line; }
+    .table tbody tr:hover td { @apply bg-surface-2/50; }
+    /* object × host matrices: crosshair — hovered row and column in amber (stands out from the accent in every theme),
+       their crossing cell strongest. Column classes are set by app.js ([data-crosshair]). !important: beats bg utilities on cells */
+    .table-matrix tbody tr:hover > td, .table-matrix td.xh-col { background-color: rgb(245 158 11 / .16) !important; }
+    /* header stays sticky: opaque amber so rows scrolling under it do not show through */
+    .table-matrix thead th.xh-col { background-color: color-mix(in srgb, rgb(245 158 11) 22%, var(--color-surface-2)) !important; }
+    .table-matrix tbody tr:hover > td.xh-col { background-color: rgb(245 158 11 / .42) !important; box-shadow: inset 0 0 0 1px rgb(217 119 6); }
+    .table-matrix thead th.xh-col { color: rgb(180 83 9); }
+    .dark .table-matrix thead th.xh-col { color: rgb(251 191 36); }
+    .table tr:last-child td { @apply border-b-0; }
+    .table th.th-sort { @apply cursor-pointer select-none hover:text-fg; }
+    .table th.th-sort::after { content: '↕'; @apply ml-1 opacity-30 text-[10px]; }
+    .table th.th-sort[data-dir='asc']::after { content: '▲'; @apply opacity-90 text-accent; }
+    .table th.th-sort[data-dir='desc']::after { content: '▼'; @apply opacity-90 text-accent; }
+    /* right-aligned (numeric) columns: the arrow goes before the label so the label ends on the same edge as the values */
+    .table th.th-sort.text-right::after { content: none; }
+    .table th.th-sort.text-right::before { content: '↕'; @apply mr-1 opacity-30 text-[10px]; }
+    .table th.th-sort.text-right[data-dir='asc']::before { content: '▲'; @apply opacity-90 text-accent; }
+    .table th.th-sort.text-right[data-dir='desc']::before { content: '▼'; @apply opacity-90 text-accent; }
+
+    /* Sticky header inside a scroll box: <div class="table-scroll"><table class="table table-sticky"> */
+    .table-scroll { @apply overflow-auto max-h-[calc(100dvh-12rem)]; }
+    .table-sticky thead { @apply sticky top-0 z-10; }
+    .table-sticky th { @apply bg-surface-2; }
+    /* page-level sticky header below the fixed top bars and a sticky title row (detail pages) */
+    .table-sticky-under-title thead { @apply top-[131px]; }
+
+    /* Column filter row: <tr data-filters> in <thead> */
+    .table tr[data-filters] th { @apply normal-case tracking-normal font-normal px-1.5 py-1; }
+    .table tr[data-filters] .input { @apply py-0.5 px-1.5 text-xs min-w-0; }
+    /* numeric column filters fill their column and end on the values' right edge */
+    .table tr[data-filters] th:has([data-cf='num']) { @apply text-right; }
+    .table tr[data-filters] .input[data-cf='num'] { width: 100% !important; min-width: 3rem; @apply text-right; }
+    .table tr[data-filters] th.cf-active .input { @apply border-accent ring-1 ring-accent/30; }
+    .cf-check { @apply inline-flex items-center gap-1 text-xs text-muted cursor-pointer select-none whitespace-nowrap; }
+    .cf-check input { @apply accent-(--color-accent) size-3; }
+    .table tr[data-filters] th.cf-active .cf-check:has(input:checked) { @apply text-accent font-medium; }
+
+    .hide-local tr[data-local] { @apply hidden; }
+
+    .badge { @apply inline-flex items-center gap-1 rounded px-1.5 py-px text-[11px] font-medium bg-surface-2 text-muted whitespace-nowrap; }
+    .badge-accent { @apply bg-accent-soft text-accent; }
+    .badge-ok { @apply bg-ok/15 text-ok; }
+    .badge-warn { @apply bg-warn/15 text-warn; }
+    .badge-crit { @apply bg-crit/15 text-crit; }
+    .badge-info { @apply bg-info/15 text-info; }
+
+    .dot { @apply inline-block size-2 rounded-full shrink-0; }
+
+    .nav-link { @apply px-2.5 py-1 rounded-md text-sm text-muted hover:text-fg hover:bg-surface-2 whitespace-nowrap; }
+    .nav-link.active { @apply text-fg bg-surface-2 font-medium; }
+    .crumb-sep { @apply text-muted/60 select-none; }
+    /* numbered steps (how to get a license) */
+    .license-steps { @apply space-y-3; }
+    .license-steps > li { @apply flex items-start gap-3; }
+    .license-step-no { @apply inline-flex size-6 shrink-0 items-center justify-center rounded-full bg-accent-soft text-accent text-xs font-semibold; }
+    /* physical adapter speed pills (Networks → Physical adapters) */
+    .pnic { @apply inline-block min-w-9 rounded px-1 py-px text-[10px] font-semibold leading-4 tabular-nums text-center; }
+    .pnic-down { @apply text-muted/70 border border-line font-normal; }
+    .pnic-down-crit { @apply text-crit border border-crit/50 bg-crit/10; }
+    .pnic-unused { @apply opacity-60 outline-1 outline-dashed outline-current -outline-offset-1; }
+    /* hover card (data-hovercard + <template>, app.js) */
+    .hovercard { @apply fixed z-[60] shadow-xl px-3 py-2.5 max-w-sm; }
+    /* section tabs of the selected vCenter (second header row) */
+    .vc-tab { @apply relative inline-flex items-center gap-1.5 h-9 px-2.5 text-[13px] text-muted hover:text-fg whitespace-nowrap; }
+    .vc-tab.active { @apply text-fg font-medium; }
+    .vc-tab-icon { @apply size-3.5 shrink-0 opacity-70; }
+    .vc-tab.active .vc-tab-icon { @apply text-accent opacity-100; }
+    .vc-tab.active::after { content: ''; @apply absolute inset-x-2 bottom-0 h-0.5 rounded-full bg-accent; }
+    .vc-tab-count { @apply rounded-full bg-surface px-1.5 text-[10px] tabular-nums text-muted; }
+    .vc-tab.active .vc-tab-count { @apply bg-accent-soft text-accent; }
+}
+
+@keyframes magic-shift { to { background-position: -300% 0; } }
+@keyframes magic-twinkle { 0%, 100% { transform: scale(1) rotate(0); opacity: 1; } 50% { transform: scale(1.18) rotate(12deg); opacity: .85; } }
+@media (prefers-reduced-motion: reduce) { .btn-magic, .btn-magic svg { animation: none; } }
