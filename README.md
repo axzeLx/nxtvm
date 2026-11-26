@@ -11,7 +11,24 @@ Collecting is **read-only**: nxtVM never changes anything in your vSphere enviro
 
 ![nxtVM — overview of a vCenter](docs/screenshots/overview.png)
 
-<sub>Screenshot with sample names and addresses.</sub>
+<sub>Screenshots with sample names and addresses.</sub>
+
+<details>
+<summary><b>More screenshots</b> — dark mode, physical adapters, Checkup</summary>
+
+**Overview in dark mode**
+
+![nxtVM — overview in dark mode](docs/screenshots/overview-dark.png)
+
+**Physical adapters** — link speed and state of every vmnic per host
+
+![nxtVM — physical adapter grid](docs/screenshots/physical-adapters.png)
+
+**Checkup** — health score per vCenter and category, top problems ranked by impact
+
+![nxtVM — Checkup overview](docs/screenshots/checkup.png)
+
+</details>
 
 ## Features
 
