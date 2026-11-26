@@ -310,8 +310,11 @@
                                 @foreach ($passed as $key => $c)
                                     <li class="px-3 py-1.5 flex items-center gap-2 text-sm">
                                         <svg class="size-4 text-ok" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 5 5 9-10"/></svg>
-                                        {{ $reg->get($key)->title }}
-                                        <span class="ml-auto text-xs text-muted tabular-nums">{{ __(':n checked', ['n' => $c['total']]) }}</span>
+                                        <span class="min-w-0">
+                                            {{ $reg->get($key)->title }}
+                                            @if (! empty($c['note'])) <span class="block text-xs text-ok">{{ $c['note'] }}</span> @endif
+                                        </span>
+                                        <span class="ml-auto shrink-0 text-xs text-muted tabular-nums">{{ __(':n checked', ['n' => $c['total']]) }}</span>
                                     </li>
                                 @endforeach
                             </ul>

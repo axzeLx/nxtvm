@@ -32,7 +32,8 @@ final class Report
             }
             $c = ['category' => $check->category, 'total' => $parts->sum('total'), 'crit' => $parts->sum('crit'),
                 'warn' => $parts->sum('warn'), 'info' => $parts->sum('info'), 'weight' => $parts->max('weight'),
-                'na' => $parts->pluck('na')->filter()->first(), 'error' => $parts->pluck('error')->filter()->first()];
+                'na' => $parts->pluck('na')->filter()->first(), 'error' => $parts->pluck('error')->filter()->first(),
+                'note' => $parts->pluck('note')->filter()->unique()->join(' · ') ?: null];
             $applicable = $parts->reject(fn ($p) => in_array($p['status'], ['na', 'error'], true));
             $c['status'] = match (true) {
                 $c['crit'] > 0 => 'crit', $c['warn'] > 0 => 'warn', $c['info'] > 0 => 'info',

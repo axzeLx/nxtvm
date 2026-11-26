@@ -12,6 +12,9 @@ final class Result
 
     public ?string $na = null;
 
+    /** Short summary shown when the check passes ("no overcommitted datastore …"). */
+    public ?string $note = null;
+
     /** @var list<array{severity: string, object_type: string, object_name: ?string, object_moid: ?string, message: string}> */
     public array $findings = [];
 
@@ -35,6 +38,13 @@ final class Result
     public function na(string $reason): self
     {
         $this->na = $reason;
+
+        return $this;
+    }
+
+    public function note(string $note): self
+    {
+        $this->note = $note;
 
         return $this;
     }

@@ -34,18 +34,27 @@ class StorageChecks extends CheckSet
                     }
                 }),
 
-            $this->check('ds_overprovisioned', __('Datastore overprovisioning'), 'warn', 2,
-                __('Thin disks provisioned far beyond the capacity can fill the datastore suddenly; monitor growth, set alarms or move VMs.'),
-                ['warn_pct' => [150, __('Warning provisioned (%)')], 'crit_pct' => [200, __('Critical provisioned (%)')]],
+            $this->check('ds_overprovisioned', __('Datastore overcommit'), 'warn', 2,
+                __('The disks provisioned on the datastore (thin disks at full size) exceed its capacity. If the VMs fill their thin disks the datastore runs full and the VMs that need to write stop; monitor growth, set alarms or move VMs.'),
+                ['info_pct' => [100, __('Report provisioned above (%)')], 'warn_pct' => [150, __('Warning provisioned (%)')], 'crit_pct' => [200, __('Critical provisioned (%)')]],
                 function (Context $c, array $p, Result $r) {
                     $ds = $c->datastores()->where('capacity_bytes', '>', 0);
                     $r->total($ds->count());
+                    $max = null;
                     foreach ($ds as $d) {
                         $pct = 100 * $d->provisioned_bytes / $d->capacity_bytes;
-                        if ($pct >= $p['warn_pct']) {
-                            $r->obj($d, __('Provisioned :pct % (:prov on :cap).', ['pct' => round($pct), 'prov' => Fmt::bytes($d->provisioned_bytes), 'cap' => Fmt::bytes($d->capacity_bytes)]),
-                                $pct >= $p['crit_pct'] ? 'crit' : 'warn');
+                        if ($max === null || $pct > $max[0]) {
+                            $max = [$pct, $d->name];
                         }
+                        if ($pct > $p['info_pct']) {
+                            $r->obj($d, __('Overcommitted: provisioned :pct % (:prov on :cap, :over over capacity).', [
+                                'pct' => round($pct), 'prov' => Fmt::bytes($d->provisioned_bytes), 'cap' => Fmt::bytes($d->capacity_bytes),
+                                'over' => Fmt::bytes($d->provisioned_bytes - $d->capacity_bytes),
+                            ]), match (true) { $pct >= $p['crit_pct'] => 'crit', $pct >= $p['warn_pct'] => 'warn', default => 'info' });
+                        }
+                    }
+                    if ($max !== null && ! $r->findings) {
+                        $r->note(__('No overcommitted datastore (highest: :pct % on :ds).', ['pct' => round($max[0]), 'ds' => $max[1]]));
                     }
                 }),
 

@@ -16,7 +16,7 @@
                     <th class="text-right">{{ __('Free') }}</th>
                     <th>{{ __('Used') }}</th>
                     <th class="text-right">{{ __('Provisioned') }}</th>
-                    <th class="text-right">{{ __('Overcommit') }}</th>
+                    <th class="text-right" title="{{ __('Provisioned ÷ capacity; above 100 % the datastore is overcommitted') }}">{{ __('Provisioned %') }}</th>
                     <th class="text-right">{{ __('Hosts') }}</th>
                     <th class="text-right">VMs</th>
                 </tr>
@@ -49,7 +49,7 @@
                         <td class="text-xs text-right tabular-nums whitespace-nowrap" data-sort="{{ $ds->free_bytes }}">{{ Fmt::bytes($ds->free_bytes) }}</td>
                         <td data-sort="{{ $used }}">@include('partials.bar', ['pct' => $used])</td>
                         <td class="text-xs text-right tabular-nums whitespace-nowrap" data-sort="{{ $ds->provisioned_bytes }}">{{ Fmt::bytes($ds->provisioned_bytes) }}</td>
-                        <td @class(['text-xs text-right tabular-nums', 'text-warn' => $over > 150 && $over <= 200, 'text-crit' => $over > 200]) data-sort="{{ $over }}">{{ $over !== null ? $over.'%' : '—' }}</td>
+                        <td @class(['text-xs text-right tabular-nums', 'text-info' => $over > 100 && $over < 150, 'text-warn' => $over >= 150 && $over < 200, 'text-crit' => $over >= 200]) data-sort="{{ $over }}">{{ $over !== null ? $over.'%' : '—' }}</td>
                         <td class="text-xs text-right tabular-nums">{{ $ds->host_count }}</td>
                         <td class="text-xs text-right tabular-nums">{{ $ds->vm_count }}</td>
                     </tr>

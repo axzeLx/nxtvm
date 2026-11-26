@@ -52,6 +52,7 @@ final class Runner
                 'category' => $check->category, 'status' => $status, 'total' => $res->total,
                 'crit' => $crit, 'warn' => $warn, 'info' => $info,
                 'weight' => $this->config->weight($check), 'na' => $res->na, 'error' => $error,
+                'note' => $error === null ? $res->note : null,
             ];
             $results[$key]['score'] = Score::check($results[$key]);
 

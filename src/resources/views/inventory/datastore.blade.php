@@ -108,14 +108,14 @@
                             [__('Free'), Fmt::bytes($ds->free_bytes), null],
                             [__('Provisioned'), Fmt::bytes($ds->provisioned_bytes), null],
                             [__('Uncommitted'), Fmt::bytes($d['uncommitted_bytes'] ?? 0), null],
-                            [__('Overcommit'), $over !== null ? $over.'%' : '—', $over > 200 ? 'crit' : ($over > 150 ? 'warn' : null)],
+                            [__('Provisioned %'), $over !== null ? $over.'%'.($over > 100 ? ' · '.__('overcommitted') : '') : '—', match (true) { $over >= 200 => 'crit', $over >= 150 => 'warn', $over > 100 => 'info', default => null }],
                             [__('VM disks here'), Fmt::bytes($vms->sum('ds_bytes')).' · '.$vms->sum('ds_disks').' '.__('disks'), null],
                             [__('Hosts'), $mounts->count(), null],
                             ['VMs', $vmOn.' '.__('running').' / '.$vms->count(), null],
                         ] as [$label, $value, $tone])
                             <div class="px-3 py-1.5 flex justify-between gap-4">
                                 <dt class="text-muted">{{ $label }}</dt>
-                                <dd @class(['tabular-nums', 'text-warn' => $tone === 'warn', 'text-crit' => $tone === 'crit'])>{{ $value }}</dd>
+                                <dd @class(['tabular-nums', 'text-info' => $tone === 'info', 'text-warn' => $tone === 'warn', 'text-crit' => $tone === 'crit'])>{{ $value }}</dd>
                             </div>
                         @endforeach
                     </dl>
